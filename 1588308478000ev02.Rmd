@@ -1,0 +1,248 @@
+---
+title: "Projecto Final"
+date: "4/29/2020"
+
+author: "Marian Alejandra Herrera Ayala"
+campus: "Obregón"
+matricula: "A00227534"
+
+
+output: html_document
+---
+
+Parte 1
+
+  URL del video: https://youtu.be/5tXMbJ29jVo 
+
+    Librearias
+
+```{r} 
+library(ape)
+library(ggtree)
+library(DECIPHER)
+library(viridis)
+library(Biostrings)
+library(seqinr)
+library(adegenet)
+```
+
+    1.- Obtén las secuencias de las variantes mexicanas del virus desde el NCBI (Enlaces a un sitio externo.) y secuencias de las variantes de los continentes del mundo. El total de variantes que debes tener son: todas las variantes mexicanas y una variante por continente (de América incluir la de otro país).
+    
+```{r} 
+# México
+H1N1<-read.fasta("H1N1.fasta");
+H3N2<-read.fasta("H3N2.fasta");
+H7N3<-read.fasta("H7N3.fasta");
+
+# America
+america<-read.fasta("Oregon.fasta");
+
+# Europa
+europa<-read.fasta("Italia.fasta");
+
+# Asia
+asia<-read.fasta("Guangdong.fasta");
+
+# Oceania
+oceania<-read.fasta("Australia.fasta");
+
+# Africa
+africa<-read.fasta("Egipto.fasta")
+```
+
+    
+    2.- Calcula el número de bases de cada variante por continente.
+    
+```{r} 
+# America y México
+
+diH1<-count(H1N1[[1]],1)
+diH3<-count(H3N2[[1]],1)
+diH7<-count(H7N3[[1]],1)
+
+tNH1<-length(H1N1[[1]])
+tNH3<-length(H3N2[[1]])
+tNH7<-length(H7N3[[1]])
+
+print("México ----------------------------------------------------------------------------------------------------------------")
+
+print("H1N1")
+print(c("Cantidad de nucletidos en total ->",tNH1))
+print(c("     ",diH1))
+print("------------------------------------------------------------------------------------------------------------------------")
+print("H3N2")
+print(c("Cantidad de nucletidos en total ->",tNH3))
+print(c("     ",diH3))
+print("------------------------------------------------------------------------------------------------------------------------")
+print("H7N3")
+print(c("Cantidad de nucletidos en total ->",tNH7))
+print(c("     ",diH7))
+print("------------------------------------------------------------------------------------------------------------------------")
+
+```
+
+```{r}
+
+print("USA - America ----------------------------------------------------------------------------------------------------------------")
+
+diAme<-count(america[[1]],1)
+
+tAme<-length(america[[1]])
+
+print("H1N1")
+print(c("Cantidad de nucletidos en total ->",tAme))
+print(c("     ",diAme))
+
+```
+    
+```{r}
+# Europa
+print("Italia - Europa --------------------------------------------------------------------------------------------------------")
+
+diIta<-count(europa[[1]],1)
+
+tIta<-length(europa[[1]])
+
+print("H7N7")
+print(c("Cantidad de nucletidos en total ->",tIta))
+print(c("     ",diIta))
+```
+
+```{r}
+# Asia
+print("China - Asia -----------------------------------------------------------------------------------------------------------")
+
+diChi<-count(asia[[1]],1)
+
+tChi<-length(asia[[1]])
+
+print("H7N9")
+print(c("Cantidad de nucletidos en total ->",tChi))
+print(c("     ",diChi))
+```
+
+```{r}
+# Oceania
+print("Australia - Oceania ----------------------------------------------------------------------------------------------------")
+
+diAus<-count(oceania[[1]],1)
+
+tAus<-length(oceania[[1]])
+
+print("H2N2")
+print(c("Cantidad de nucletidos en total ->",tAus))
+print(c("     ",diAus))
+```
+
+```{r}
+# Africa
+print("Egipto - Africa --------------------------------------------------------------------------------------------------------")
+
+diAfr<-count(africa[[1]],1)
+
+tAfr<-length(africa[[1]])
+
+print("H5N1")
+print(c("Cantidad de nucletidos en total ->",tAfr))
+print(c("     ",diAfr))
+
+```
+
+
+    3.- Crea una gráfica donde compares todas las variantes del virus y las bases de ADN que los componen (por continente). 
+    
+```{r} 
+vA<-c(diH1[[1]],diH3[[1]],diH7[[1]],diAme[[1]],diIta[[1]],diChi[[1]],diAus[[1]],diAfr[[1]],0,0,
+      diH1[[2]],diH3[[2]],diH7[[2]],diAme[[2]],diIta[[2]],diChi[[2]],diAus[[2]],diAfr[[2]],0,0,
+      diH1[[3]],diH3[[3]],diH7[[3]],diAme[[3]],diIta[[3]],diChi[[3]],diAus[[3]],diAfr[[3]],0,0,
+      diH1[[4]],diH3[[4]],diH7[[4]],diAme[[4]],diIta[[4]],diChi[[4]],diAus[[4]],diAfr[[4]],0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+
+barplot(vA, beside = TRUE,col = c("cyan","magenta","green","red","yellow","brown","black","pink","pink","pink"), 
+        main = "Nucleotidos de las variantes de la influenza de México y el mundo", xlab = "Nucleotidos", ylab = "Cantidad presente", 
+        names.arg ="                                    Adeninas       Citocinas        Guaninas      Timinas                                                                          ",
+        legend.text = c("H1N1 (México)","H3N2 (México)","H7N3(México)","H1N1 (Ámerica)","H7N7 (Europa)","H7N9 (Asia)","H2N2 (Oceania)","H5N1 (África)"))
+
+
+compara<-function(Mex1,Mex2,Mex3,Ame,Eur,Asi,Oce,Afr){
+  par(mfrow=c(2,4))
+  barplot(table(Mex1),col=1:4, main="H1N1 (México)")
+  barplot(table(Mex1),col = 1:4, main="H3N2 (México")
+  barplot(table(Mex3),col=1:4, main="H7N3(México)")
+  barplot(table(Ame),col=1:4, main="H1N1 (Ámerica)")
+  barplot(table(Eur),col=1:4, main="H7N7 (Europa)")
+  barplot(table(Asi),col=1:4, main="H7N9 (Asia)")
+  barplot(table(Oce),col=1:4, main="H2N2 (Oceania)")
+  barplot(table(Afr),col=1:4, main="H5N1 (África)")
+}
+
+compara(H1N1,H3N2,H7N3,america,europa,asia,oceania,africa)
+
+```
+
+    4.- Agrega un análisis jerárquico global obtenido de las secuencias que seleccionaron para estudiar.
+    
+```{r} 
+virus <- c("MG856196","KJ855467","CY125728","MT168248.1","KY643844","KF918337.1","KP098400.1","KP702173")
+secuencias <- read.GenBank(virus)
+
+attributes(secuencias)
+names(secuencias)
+attr(secuencias, "species")
+
+write.dna(secuencias,   file ="influenzaMundo.fasta", format = "fasta", append =
+FALSE, nbcol = 6, colsep = " ", colw = 10)
+
+secuencia_sin_alinear<- readDNAStringSet("influenzaMundo.fasta", format = "fasta")
+secuencia_sin_alinear <- OrientNucleotides(secuencia_sin_alinear)
+
+secuencia_alineada <- AlignSeqs(secuencia_sin_alinear)
+
+writeXStringSet(secuencia_alineada, file="influenzaMundo.fasta")
+
+virus_alineado <- read.alignment("influenzaMundo.fasta", format = "fasta")
+
+matriz_distancia <- dist.alignment(virus_alineado, matrix = "similarity")
+
+arbol_del_virus <- nj(matriz_distancia)
+class(arbol_del_virus) 
+
+arbol_del_virus[["tip.label"]][1]<-"H1N1 (México - Ámerica)"
+arbol_del_virus[["tip.label"]][2]<-"H3N2 (México - Ámerica)"
+arbol_del_virus[["tip.label"]][3]<-"H7N3 (México - Ámerica)"
+arbol_del_virus[["tip.label"]][4]<-"H1N1 (USA - Ámerica)"
+arbol_del_virus[["tip.label"]][5]<-"H7N7 (Italia - Europa)"
+arbol_del_virus[["tip.label"]][6]<-"H7N9 (China - Asia)"
+arbol_del_virus[["tip.label"]][7]<-"H2N2 (Australia - Oceania)"
+arbol_del_virus[["tip.label"]][8]<-"H5N1 (Egipto - África)"
+
+plot(arbol_del_virus, cex = 1)
+title("Variantes de la influenza en el mundo")
+```
+
+    5.- Agrega una interpretación escrita de las gráficas que integras (una por continente y la del análisis jerárquico).
+            En la gráfica de barras, tenemos primero que nada, es un hecho general que se puede observar entre todas las variantes, inclusive las que son la misma pero de distinto lugar, tienen un nivel significamente superior de Adeninas sobre los otros nucleótidos, pasando siempre de las 500 adeninas pero jamás pasa de las 700 (500<=700). 
+            Posteriormente, generalmente observar que las en todas las gráficas la cantidad de las timinas y las guaninas son casi iguales, pero dependiendo del subtipo podemos ver como una de estas, tiene mayor cantidad de base en el virus, oscilando entre las 350 a las 450 (350 <= 450). Aun así cabe mencionar, que si se observan las timinas en todas las variantes podemos observar que la variación de tipo a tipos, es menor a la variación que se tiene en las guaninas.
+            Finalmente, podemos observar y determinar, sin complicación alguna, que las citocinas son el nucleótido con la menor cantidad de agentes presentes en cada de los RNA utilizados para el trabajo, pues apenas llegan a las 300 citocinas y al manos en las variantes que escogí, ninguna paso de las 400, la máxima cantidad de citocinas fue para H3N2 con 353 citocinas (300<=400).
+            
+            Por otro lado, en el filograma basado en la distancia entre las variantes, podemos observar desde el principio dos nodos hoja independientes entre sí, que son H2N2 y la H5N2, pertenecientes a Oceanía y África respectivamente, que se encuentran enlazados al primer punto del primer punto de divergencia del filograma y, cabe mencionar, son los puntos más alejados del diagrama de árbol. En dicho punto de divergencia, se vuelve a dividir en dos. En el primer camino vemos que otra vez se ramifica en dos nodos hoja, que muestra en ambos casos al virus H1N1, pero de lugares y tiempos distintos probando que, a pesar de que son el mismo virus, son versiones distintas del mismo tipo. Cabe mencionar que, la versión USA le pertenece al año 2020 y la versión mexicana es del año 2009.
+            Mientras tanto, en el segundo camino del segundo nodo, vemos otro punto de divergencia dividido entre un nodo interno para H3N2 México y, posteriormente, vemos otro punto de divergencia, que también está dividido en un nodo interno para H7N3 y en el segundo camino, tenemos otro punto de divergencia para H7N9 y H7N7.
+
+
+Referencia de  los genomas utilizados
+
+    Título: Avian Influenza A(H5N1) Virus in Egypt. Autores: El-Shesheny,R., Kayed,A.S., Kandeil,A., Kandeel,A., Refaey,S., Kayali,G. and Ali,M.A. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/KP702173.1/ 
+
+    Título: Detection of a human H7N9 virus with polybasic amino acid insertion at the connecting peptide of hemagglutinin protein in China Autores: Zhang,F., Zhu,H., Hu,F., Wang,J., He,X., Zhang,Y., Li,L., Cheung,Y.M., Leung,G.M. and Guan,Y. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/KY643844 
+
+    Título: Influenza Sequencing Activity group. Autores: Jernigan,D., Wentworth,D., Barnes,J., Garten,R. and Xu,X. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/MT168248.1?report=genbank 
+
+    Título: Genetic analysis of Influenza A viruses isolated in Mexico. Autores: Isa,P., Lopez,S., Escalera-Zamudio,M., Guemes,A.G. and Arias,C.F. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/MG856196.1 
+
+    Título: Molecular Epidemiology of Influenza A/H3N2 Viruses Circulating in Mexico from 2003 to 2012. Autores: Escalera-Zamudio,M., Isa,P., Nelson,M.I., Cobian Guemes,A.G., Lopez-Martinez,I., Cruz Ortiz,N., Iguala-Vidales,M., Rodriguez, Garcia,E., Barrera-Badillo,G., Diaz-Quinones,J.A., Lopez,S. and Arias,C.F. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/KJ855467.1 
+
+    Título: Notes from the Field: Highly Pathogenic Avian Influenza A (H7N3) Virus Infection in Two Poultry Workers - Jalisco, Mexico, July 2012. Autores: Barrera-Badillo,G., Ramirez-Gonzalez,J.E., Aparicio-Antonio,R., Nunez-Garcia,T., Arellano-Suarez,D., Alcantara-Perez,P.A., Rodriguez-Maldonado,A.P., Rodriguez-Reyes,B.D., Wong-Arambula,C.E., Gonzalez-Duran,E., Ortiz-Alcantara,J.M., Diaz-Quinonez,J.A., Reyes-Teran,G., Vazquez-Perez,J., Avila-Rios,S. and Lopez-Martinez,I.Referencia: https://www.ncbi.nlm.nih.gov/nuccore/CY125728.1 
+
+    Título: NIAID CEIRS H2N2 Risk Assessment. Autores: Fabrizio,T.P., Krauss,S., Webster,R.G. and Webby,R.J. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/KP098400.1/ 
+
+    Título: Sequencing of a complete Influenza A virus genome (A/Italy/3/2013 H7N7) using Ion PGM Sequencer. Autores: Zaccaria,G., Boni,A., Vaccari,G., Facchini,M., Di Martino,A., Castrucci,M.R. and Puzelli,S. Referencia: https://www.ncbi.nlm.nih.gov/nuccore/KF918337.1/ 
